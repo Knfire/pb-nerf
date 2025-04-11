@@ -1,6 +1,6 @@
 # PB-NeRF
 
-PB-NeRF: Part-Based Neural Radiance Fields for Human Rendering  
+PB-NeRF: Part-Based Neural Radiance Fields for Human Rendering   
 
 ## Introduction
 
@@ -9,3 +9,4 @@ PB-NeRF: Part-Based Neural Radiance Fields for Human Rendering
 ## Method
 
 ![Method](docs/method.png)
+
