@@ -1,0 +1,54 @@
+import os
+import numpy as np
+import tqdm
+
+
+def get_params(params_path):
+    params = np.load(os.path.join(data_root, 'params', params_path), allow_pickle=True).item()
+
+    Rh = params['Rh'].astype(np.float32)
+    Th = params['Th'].astype(np.float32)
+    poses = params['poses'].astype(np.float32)
+    shapes = params['shapes'].astype(np.float32)
+
+    return Rh, Th, poses, shapes
+
+
+def main(subject_id):
+    Rhs = []
+    Ths = []
+    poses = []
+    shapes = []
+    file_lst = os.listdir(os.path.join(data_root, 'params'))
+    file_lst.sort(key=lambda x: int(x.split('.')[0]))
+    for f in tqdm.tqdm(file_lst):
+        Rh, Th, pose, shape = get_params(f)
+        Rhs.append(Rh)
+        Ths.append(Th)
+        poses.append(pose)
+        shapes.append(shape)
+
+    Rh = np.concatenate(Rhs, axis=0)
+    Th = np.concatenate(Ths, axis=0)
+    pose = np.concatenate(poses, axis=0)
+    shape = np.concatenate(shapes, axis=0)
+
+    params = {
+        'Rh': Rh,
+        'Th': Th,
+        'pose': pose,
+        'shape': shape
+    }
+
+    os.makedirs(os.path.join(os.getcwd(), 'data/params'), exist_ok=True)
+    np.save(os.path.join(os.getcwd(), 'data/params/{}.npy'.format(subject_id)), params)
+
+
+if __name__ == "__main__":
+
+    # lan marc olek vlad
+    subject_ids = ['lan_images620_1300', 'marc_images35000_36200', 'olek_images0812', 'vlad_images1011']
+
+    for subject_id in subject_ids:
+        data_root = '/root/autodl-tmp/monocap/{}/'.format(subject_id)
+        main(subject_id)
